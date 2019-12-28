@@ -33,8 +33,9 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   logo: {
-    width: 20,
-    height: 20
+    width: 30,
+    height: 30,
+    resizeMode: "contain"
   }
 });
 

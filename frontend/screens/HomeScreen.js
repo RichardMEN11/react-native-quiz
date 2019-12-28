@@ -11,14 +11,14 @@ import {
 import Layout from "../components/Layout";
 import QuestionCard from "../components/QuestionCard";
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   return (
     <Layout>
       <ScrollView>
-        <QuestionCard title="title" />
-        <QuestionCard title="title" />
-        <QuestionCard title="title" />
-        <QuestionCard title="title" />
+        <QuestionCard title="title" navigation={navigation} />
+        <QuestionCard title="title" navigation={navigation} />
+        <QuestionCard title="title" navigation={navigation} />
+        <QuestionCard title="title" navigation={navigation} />
       </ScrollView>
     </Layout>
   );
