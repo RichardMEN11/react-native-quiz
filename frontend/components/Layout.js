@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 import { Card, Button, Header, Avatar } from "react-native-elements";
 
 const Layout = props => {
@@ -12,6 +12,13 @@ const Layout = props => {
           justifyContent: "space-around"
         }}
         rightComponent={<Avatar rounded title="RM" />}
+        rightContainerStyle={styles.profil}
+        centerComponent={
+          <Image
+            source={require("../assets/icons/logopf.png")}
+            style={styles.logo}
+          />
+        }
       />
       {props.children}
     </View>
@@ -21,6 +28,13 @@ const Layout = props => {
 const styles = StyleSheet.create({
   header: {
     backgroundColor: "#6F9C94"
+  },
+  profil: {
+    marginBottom: 10
+  },
+  logo: {
+    width: 20,
+    height: 20
   }
 });
 

@@ -8,22 +8,17 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-import { Card, Button } from "react-native-elements";
 import Layout from "../components/Layout";
+import QuestionCard from "../components/QuestionCard";
 
 export default function HomeScreen() {
   return (
     <Layout>
       <ScrollView>
-        <Card title="Innere Medizin">
-          <Button title="Learn now"></Button>
-        </Card>
-        <Card title="Äußere Medizin">
-          <Button title="Learn now"></Button>
-        </Card>
-        <Card title="Äußere Medizin">
-          <Button title="Learn now"></Button>
-        </Card>
+        <QuestionCard title="title" />
+        <QuestionCard title="title" />
+        <QuestionCard title="title" />
+        <QuestionCard title="title" />
       </ScrollView>
     </Layout>
   );
