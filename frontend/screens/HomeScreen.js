@@ -13,7 +13,7 @@ import QuestionCard from "../components/QuestionCard";
 
 export default function HomeScreen({ navigation }) {
   return (
-    <Layout>
+    <Layout navigation={navigation}>
       <ScrollView>
         <QuestionCard title="title" navigation={navigation} />
         <QuestionCard title="title" navigation={navigation} />
@@ -25,7 +25,7 @@ export default function HomeScreen({ navigation }) {
 }
 
 HomeScreen.navigationOptions = {
-  header: null
+  title: "Home"
 };
 
 const styles = StyleSheet.create({
