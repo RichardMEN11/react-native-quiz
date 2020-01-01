@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Card, Button, Header, Avatar } from "react-native-elements";
 
 const Layout = props => {
@@ -11,7 +11,15 @@ const Layout = props => {
           backgroundColor: "#6F9C94",
           justifyContent: "space-around"
         }}
-        rightComponent={<Avatar rounded title="RM" />}
+        rightComponent={
+          <TouchableOpacity
+            onPress={() => {
+              props.navigation.navigate("Profil");
+            }}
+          >
+            <Avatar rounded title="RM" />
+          </TouchableOpacity>
+        }
         rightContainerStyle={styles.profil}
         centerComponent={
           <Image
