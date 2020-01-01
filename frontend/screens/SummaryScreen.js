@@ -56,6 +56,9 @@ export default function SummaryScreen({ navigation }) {
             title="return home"
             buttonStyle={styles.button}
             titleStyle={styles.buttonText}
+            onPress={() => {
+              navigation.navigate("Home");
+            }}
           ></Button>
         </ImageBackground>
       </View>
