@@ -24,6 +24,7 @@
     "@nestjs/core": "^6.7.2",
     "@nestjs/mongoose": "^6.1.2",
     "@nestjs/platform-express": "^6.7.2",
+    "bcrypt": "^3.0.7",
     "class-validator": "^0.11.0",
     "mongoose": "^5.8.3",
     "reflect-metadata": "^0.1.13",
