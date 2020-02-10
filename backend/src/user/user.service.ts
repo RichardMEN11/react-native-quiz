@@ -2,9 +2,10 @@ import { Model } from 'mongoose';
 import {
   Injectable,
   InternalServerErrorException,
+  UnauthorizedException,
   Logger,
 } from '@nestjs/common';
-import { User } from './Dto/user.dto';
+import { User, UserSignIn } from './Dto/user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 
@@ -31,5 +32,21 @@ export class UserService {
       throw new InternalServerErrorException();
       this.logger.error(error);
     }
+  }
+
+  async signIn(user: UserSignIn): Promise<String>{
+    const {email, password } = user; 
+    const userData = await this.userModel.findOne({email}).exec()
+
+      const isPasswordCorrect = await bcrypt.compare(password, userData.password)
+      if(isPasswordCorrect){
+        //TODO: return token
+        return 'Success'
+      }  else {
+        //TODO: return and throw error
+        return 'Error'
+      }
+   
+   
   }
 }
