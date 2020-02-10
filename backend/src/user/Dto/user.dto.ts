@@ -25,3 +25,13 @@ export class User {
   @IsNumber()
   questionAnswered: number;
 }
+
+export class UserSignIn {
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(5)
+  password: string;
+}
