@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -7,11 +7,37 @@ import {
   Text,
   Dimensions
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
 
-import { Input, Button } from "react-native-elements";
+import { Input, Button, Overlay } from "react-native-elements";
+import { emailRgx } from "../constants/regex";
+import axios from "axios";
 
 const LoginScreen = ({ navigation }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
+
+  const loginUser = async () => {
+    try {
+      const data = await axios.post("http://localhost:3000/user/signIn", {
+        email,
+        password
+      });
+      if (data.status === 201) {
+        navigation.navigate("Home");
+      }
+    } catch (error) {
+      setIsVisible(true);
+    }
+  };
+
+  const tryAgain = () => {
+    setEmail("");
+    setPassword("");
+    setIsVisible(false);
+  };
+
   return (
     <SafeAreaView>
       <View style={styles.top}>
@@ -28,6 +54,12 @@ const LoginScreen = ({ navigation }) => {
             />
           }
           inputContainerStyle={styles.input}
+          onChangeText={text => {
+            setEmail(text);
+          }}
+          errorMessage={error}
+          autoCapitalize="none"
+          value={email}
         />
         <Input
           placeholder="Passwort"
@@ -43,6 +75,9 @@ const LoginScreen = ({ navigation }) => {
               marginTop: 15
             }
           ]}
+          onChangeText={text => setPassword(text)}
+          secureTextEntry={true}
+          value={password}
         />
         <Text
           style={styles.passwordReset}
@@ -56,7 +91,7 @@ const LoginScreen = ({ navigation }) => {
           buttonStyle={styles.button}
           title="Anmelden"
           onPress={() => {
-            navigation.navigate("Home");
+            loginUser();
           }}
         ></Button>
         <Text
@@ -67,6 +102,25 @@ const LoginScreen = ({ navigation }) => {
         >
           Registrieren
         </Text>
+        <Overlay
+          isVisible={isVisible}
+          windowBackgroundColor="rgba(255, 255, 255, .5)"
+          overlayBackgroundColor="red"
+          width="auto"
+          height="auto"
+        >
+          <Text>
+            Leider ist beim Login ein Fehler aufgetreten, versuche es bitte
+            erneut.
+          </Text>
+          <Button
+            title="Erneut versuchen"
+            buttonStyle={styles.simpleButton}
+            onPress={() => {
+              tryAgain();
+            }}
+          />
+        </Overlay>
       </View>
     </SafeAreaView>
   );
@@ -122,6 +176,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     textDecorationLine: "underline",
     marginTop: 20
+  },
+  simpleButton: {
+    backgroundColor: "rgba(255, 255, 255, .1)",
+    marginTop: 10
   }
 });
 

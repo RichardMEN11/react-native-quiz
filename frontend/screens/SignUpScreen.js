@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -7,11 +7,28 @@ import {
   Text,
   Dimensions
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
 
 import { Input, Button } from "react-native-elements";
+import axios from "axios";
 
 const SignUpScreen = ({ navigation }) => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const signUpUser = async () => {
+    const data = await axios.post("http://localhost:3000/user", {
+      username,
+      password,
+      email
+    });
+
+    if (data.status === 201) {
+      navigation.navigate("Login");
+    } else {
+      //TODO: Throw error
+    }
+  };
   return (
     <SafeAreaView>
       <View style={styles.top}>
@@ -28,6 +45,7 @@ const SignUpScreen = ({ navigation }) => {
             />
           }
           inputContainerStyle={styles.input}
+          onChangeText={text => setUsername(text)}
         />
         <Input
           placeholder="E-Mail"
@@ -43,6 +61,8 @@ const SignUpScreen = ({ navigation }) => {
               marginTop: 15
             }
           ]}
+          onChangeText={text => setEmail(text)}
+          autoCapitalize="none"
         />
         <Input
           placeholder="Passwort"
@@ -58,12 +78,15 @@ const SignUpScreen = ({ navigation }) => {
               marginTop: 15
             }
           ]}
+          onChangeText={text => setPassword(text)}
+          secureTextEntry={true}
+          autoCapitalize="none"
         />
         <Button
           buttonStyle={styles.button}
           title="Registrieren"
           onPress={() => {
-            navigation.navigate("Home");
+            signUpUser();
           }}
         ></Button>
         <Text

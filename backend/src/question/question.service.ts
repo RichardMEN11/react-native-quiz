@@ -24,4 +24,13 @@ export class QuestionService {
   async getAllQuestions(): Promise<Question> {
     return this.questionModel.find();
   }
+
+  async getCollectionByName(name: string): Promise<[Question]> {
+    try {
+      const response = await this.questionModel.find({ categorie: name });
+      return response;
+    } catch (error) {
+      //TODO: throw error
+    }
+  }
 }
