@@ -9,7 +9,6 @@ import {
 } from "react-native";
 
 import { Button } from "react-native-elements";
-import { data } from "../data/Questions";
 import axios from "axios";
 import { connect } from "react-redux";
 
@@ -123,7 +122,10 @@ function QuizScreen({ navigation }) {
         setQuestionNumber(questionNumber + 1);
         gameReset();
       } else {
-        navigation.navigate("Summary");
+        navigation.navigate("Summary", {
+          points,
+          numberOfQuestions: questions.length
+        });
       }
     }, 1000);
   };
