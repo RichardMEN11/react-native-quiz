@@ -8,4 +8,5 @@ export const QuestionSchema = new mongoose.Schema({
   answerD: String,
   correctAnswer: String,
   categorie: String,
+  collectionName: String,
 });

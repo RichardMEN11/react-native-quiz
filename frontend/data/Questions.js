@@ -49,6 +49,16 @@ export const data = {
       answerC: "Antwort C",
       answerD: "Antwort D",
       correctAnswer: "answerA"
+    },
+    {
+      id: 6,
+      question:
+        "Exercitation qui sunt ut do deserunt anim qui cillum non aliquip consequat in.",
+      answerA: "Antwort A",
+      answerB: "Antwort B",
+      answerC: "Antwort C",
+      answerD: "Antwort D",
+      correctAnswer: "answerA"
     }
   ]
 };
