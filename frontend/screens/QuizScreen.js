@@ -4,14 +4,16 @@ import {
   StyleSheet,
   Dimensions,
   Text,
-  ImageBackground
+  ImageBackground,
+  ActivityIndicator
 } from "react-native";
 
 import { Button } from "react-native-elements";
 import { data } from "../data/Questions";
 import axios from "axios";
+import { connect } from "react-redux";
 
-export default function QuizScreen({ navigation, route }) {
+function QuizScreen({ navigation }) {
   const [questions, setQuestions] = useState([]);
   const [buttonAColor, setButtonAColor] = useState("#fff");
   const [buttonBColor, setButtonBColor] = useState("#fff");
@@ -21,21 +23,21 @@ export default function QuizScreen({ navigation, route }) {
   const [buttonClicked, setButtonClicked] = useState(false);
   const [questionNumber, setQuestionNumber] = useState(0);
   const [points, setPoints] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // getQuestionsForQuiz();
-    console.log(route);
+    getQuestionsForQuiz();
   }, []);
 
   //fetching question on mount
   const getQuestionsForQuiz = async () => {
-    console.log(route.params);
     try {
-      const response = await axios.get(
-        `http:/localhost:3000/question/collection/${title}`
-      );
-      console.log(response.data);
+      const title = navigation.state.params.title;
+      const url = `http://localhost:3000/question/collection/${title}`;
+
+      const response = await axios.get(url);
       setQuestions(response.data);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -43,7 +45,7 @@ export default function QuizScreen({ navigation, route }) {
 
   // check if answer is correct and changing the corresponding button color
   const checkAnswer = answer => {
-    if (answer === data.questions[questionNumber].correctAnswer) {
+    if (answer === questions[questionNumber].correctAnswer) {
       switch (answer) {
         case "answerA":
           setButtonAColor("#00ff00");
@@ -93,7 +95,7 @@ export default function QuizScreen({ navigation, route }) {
   };
 
   const showCorrectAnswer = () => {
-    switch (data.questions[questionNumber].correctAnswer) {
+    switch (questions[questionNumber].correctAnswer) {
       case "answerA":
         setButtonAColor("#00ff00");
         nextQuestion();
@@ -117,7 +119,7 @@ export default function QuizScreen({ navigation, route }) {
 
   const nextQuestion = () => {
     setTimeout(() => {
-      if (questionNumber < data.questions.length - 1) {
+      if (questionNumber < questions.length - 1) {
         setQuestionNumber(questionNumber + 1);
         gameReset();
       } else {
@@ -133,6 +135,15 @@ export default function QuizScreen({ navigation, route }) {
     setButtonCColor("#fff");
     setButtonDColor("#fff");
   };
+
+  if (isLoading) {
+    return (
+      <View>
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
   return (
     <View>
       <ImageBackground
@@ -140,12 +151,12 @@ export default function QuizScreen({ navigation, route }) {
         source={require("../assets/images/background_quiz.png")}
       >
         <Text style={styles.question}>
-          {data.questions[questionNumber].question}
+          {questions[questionNumber].question}
         </Text>
       </ImageBackground>
       <View style={styles.buttonContainer}>
         <Button
-          title={data.questions[questionNumber].answerA}
+          title={questions[questionNumber].answerA}
           buttonStyle={[
             styles.button,
             {
@@ -170,7 +181,7 @@ export default function QuizScreen({ navigation, route }) {
           }}
         ></Button>
         <Button
-          title={data.questions[questionNumber].answerB}
+          title={questions[questionNumber].answerB}
           disabled={buttonClicked}
           disabledTitleStyle={styles.buttonText}
           buttonStyle={[
@@ -195,7 +206,7 @@ export default function QuizScreen({ navigation, route }) {
           }}
         ></Button>
         <Button
-          title={data.questions[questionNumber].answerC}
+          title={questions[questionNumber].answerC}
           disabled={buttonClicked}
           disabledTitleStyle={styles.buttonText}
           buttonStyle={[
@@ -220,7 +231,7 @@ export default function QuizScreen({ navigation, route }) {
           }}
         ></Button>
         <Button
-          title={data.questions[questionNumber].answerD}
+          title={questions[questionNumber].answerD}
           disabled={buttonClicked}
           disabledTitleStyle={styles.buttonText}
           buttonStyle={[
@@ -290,3 +301,9 @@ const styles = StyleSheet.create({
 QuizScreen.navigationOptions = {
   title: "Quiz"
 };
+
+const mapStateToProps = state => {
+  return { currentCollection: state.currentCollection };
+};
+
+export default connect(mapStateToProps)(QuizScreen);
