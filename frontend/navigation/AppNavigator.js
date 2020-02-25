@@ -8,10 +8,11 @@ import ProfilScreen from "../screens/ProfilScreen";
 import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import SignUpScreen from "../screens/SignUpScreen";
-import { createStackNavigator } from "react-navigation-stack";
 
 export default createAppContainer(
-  createStackNavigator({
+  createSwitchNavigator({
+    // You could add another route here for authentication.
+    // Read more at https://reactnavigation.org/docs/en/auth-flow.html
     Login: LoginScreen,
     SignUp: SignUpScreen,
     Home: HomeScreen,

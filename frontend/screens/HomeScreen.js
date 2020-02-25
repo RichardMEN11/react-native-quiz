@@ -22,7 +22,6 @@ export default function HomeScreen({ navigation }) {
   const getCollections = async () => {
     try {
       const response = await axios.get("http://localhost:3000/collections");
-      console.log(response.data);
       setCollections(response.data);
     } catch (error) {}
     //TODO: Throw error
