@@ -1,5 +1,4 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-import { Collection } from '../Interfaces/collection.interface';
 
 export class Question {
   @IsNotEmpty()
@@ -25,5 +24,5 @@ export class Question {
   categorie: string;
   @IsNotEmpty()
   @IsString()
-  collection: Collection;
+  collectionName: String;
 }

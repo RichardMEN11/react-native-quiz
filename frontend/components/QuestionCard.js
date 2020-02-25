@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
 import { Card, Button } from "react-native-elements";
-const QuestionCard = ({ title, navigation }) => {
+const QuestionCard = ({ title, navigation, id }) => {
   const [isStarred, setIsStarred] = useState(false);
   return (
     <Card
@@ -30,7 +30,12 @@ const QuestionCard = ({ title, navigation }) => {
           type="outline"
           buttonStyle={styles.button}
           titleStyle={styles.text}
-          onPress={() => navigation.navigate("Quiz")}
+          onPress={() =>
+            navigation.navigate("Quiz", {
+              title: title,
+              id: id
+            })
+          }
         ></Button>
       </View>
     </Card>

@@ -1,6 +1,10 @@
 import { Question } from './Dto/question.dto';
 import { Model } from 'mongoose';
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
@@ -25,12 +29,20 @@ export class QuestionService {
     return this.questionModel.find();
   }
 
-  async getCollectionByName(name: string): Promise<[Question]> {
+  async getCollectionByName(name: string) {
     try {
-      const response = await this.questionModel.find({ categorie: name });
+      const response = await this.questionModel
+        .find({ collectionName: name })
+        .exec();
+
+      if (response.length === 0) {
+        throw new BadRequestException(
+          `No Collection available with the name: ${name}`,
+        );
+      }
       return response;
     } catch (error) {
-      //TODO: throw error
+      throw new InternalServerErrorException(error);
     }
   }
 }

@@ -43,7 +43,7 @@ export class QuestionController {
   }
 
   @Get('/collection/:name')
-  async getCollectionByName(@Param() params): Promise<[Question]> {
+  async getCollectionByName(@Param() params) {
     this.logger.verbose(`Getting all collections`);
     return this.questionService.getCollectionByName(params.name);
   }

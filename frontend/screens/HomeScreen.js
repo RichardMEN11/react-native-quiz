@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   Platform,
@@ -11,14 +11,35 @@ import {
 import Layout from "../components/Layout";
 import QuestionCard from "../components/QuestionCard";
 
+import axios from "axios";
+
 export default function HomeScreen({ navigation }) {
+  const [collections, setCollections] = useState([]);
+  useEffect(() => {
+    getCollections();
+  }, []);
+
+  const getCollections = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/collections");
+      console.log(response.data);
+      setCollections(response.data);
+    } catch (error) {}
+    //TODO: Throw error
+  };
   return (
     <Layout navigation={navigation}>
       <ScrollView>
-        <QuestionCard title="title" navigation={navigation} />
-        <QuestionCard title="title" navigation={navigation} />
-        <QuestionCard title="title" navigation={navigation} />
-        <QuestionCard title="title" navigation={navigation} />
+        {collections.map(collection => {
+          return (
+            <QuestionCard
+              title={collection.name}
+              navigation={navigation}
+              id={collection._id}
+              key={collection._id}
+            />
+          );
+        })}
       </ScrollView>
     </Layout>
   );

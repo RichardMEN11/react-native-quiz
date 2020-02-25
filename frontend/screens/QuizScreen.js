@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -8,10 +8,11 @@ import {
 } from "react-native";
 
 import { Button } from "react-native-elements";
-import Timer from "../components/Timer";
 import { data } from "../data/Questions";
+import axios from "axios";
 
-export default function QuizScreen({ navigation }) {
+export default function QuizScreen({ navigation, route }) {
+  const [questions, setQuestions] = useState([]);
   const [buttonAColor, setButtonAColor] = useState("#fff");
   const [buttonBColor, setButtonBColor] = useState("#fff");
   const [buttonCColor, setButtonCColor] = useState("#fff");
@@ -20,6 +21,25 @@ export default function QuizScreen({ navigation }) {
   const [buttonClicked, setButtonClicked] = useState(false);
   const [questionNumber, setQuestionNumber] = useState(0);
   const [points, setPoints] = useState(0);
+
+  useEffect(() => {
+    // getQuestionsForQuiz();
+    console.log(route);
+  }, []);
+
+  //fetching question on mount
+  const getQuestionsForQuiz = async () => {
+    console.log(route.params);
+    try {
+      const response = await axios.get(
+        `http:/localhost:3000/question/collection/${title}`
+      );
+      console.log(response.data);
+      setQuestions(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // check if answer is correct and changing the corresponding button color
   const checkAnswer = answer => {
