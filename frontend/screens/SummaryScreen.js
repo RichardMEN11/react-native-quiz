@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -11,15 +11,32 @@ import {
 import { Button } from "react-native-elements";
 
 export default function SummaryScreen({ navigation }) {
+  const [wrongAnswers, setWrongAnswers] = useState(0);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
+
+  useEffect(() => {
+    calculateSummary();
+  }, []);
+
+  const calculateSummary = () => {
+    setCorrectAnswers(
+      Math.floor(
+        (navigation.state.params.points /
+          navigation.state.params.numberOfQuestions) *
+          100
+      )
+    );
+    setWrongAnswers(Math.floor(100 - correctAnswers));
+  };
   return (
     <SafeAreaView>
       <View style={styles.headingContainer}>
-        <Text style={styles.heading}>Das war nicht schlecht</Text>
-        <Text style={styles.subheading}>
-          Wenn du weiter übst wirst du immer besser
-        </Text>
+        <Text style={styles.heading}>Weiter so! </Text>
+        <Text style={styles.subheading}>Das war schon sehr gut!</Text>
       </View>
-      <Text style={styles.questions}>5 Fragen</Text>
+      <Text style={styles.questions}>
+        {navigation.state.params.numberOfQuestions} Fragen
+      </Text>
       <View style={styles.outerRow}>
         <View style={styles.card}>
           <View style={styles.innerRow}>
@@ -27,7 +44,7 @@ export default function SummaryScreen({ navigation }) {
               <View style={styles.circle}></View>
               <Text style={styles.text}>Richtig</Text>
             </View>
-            <Text>50%</Text>
+            <Text>{correctAnswers}%</Text>
           </View>
         </View>
         <View style={styles.card}>
@@ -43,7 +60,7 @@ export default function SummaryScreen({ navigation }) {
               ></View>
               <Text style={styles.text}>Falsch</Text>
             </View>
-            <Text>50%</Text>
+            <Text>{wrongAnswers}%</Text>
           </View>
         </View>
       </View>
