@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -6,13 +6,45 @@ import {
   SafeAreaView,
   Text,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator
 } from "react-native";
 import { Avatar, Button } from "react-native-elements";
-
+import { connect } from "react-redux";
 import ProgressBar from "../components/ProgressBar";
+import axios from "axios";
 
-const ProfilScreen = ({ navigation }) => {
+const ProfilScreen = ({ navigation, userId }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState({});
+  const [wrongPercentage, setWrongPercentage] = useState(0);
+  const [correctPercentage, setCorrectPercentage] = useState(0);
+  useEffect(() => {
+    getProfileData();
+  }, []);
+
+  const getProfileData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/user/${userId}`);
+      setUser(response.data);
+     
+        setCorrectPercentage(
+          Math.floor((user.correctAnswers / user.questionAnswered) * 100)
+        );
+        setWrongPercentage(Math.floor(100 - correctPercentage));
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <View>
+        <ActivityIndicator />
+      </View>
+    );
+  }
   return (
     <SafeAreaView>
       <View>
@@ -28,9 +60,15 @@ const ProfilScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.topContainer}>
-        <Avatar rounded title="RM" size="large" />
-        <Text style={styles.name}>RichMen_11</Text>
-        <Text style={styles.bold}>100 Punkte - 5 Spiele</Text>
+        <Avatar
+          rounded
+          title={user.username.charAt(0) + user.username.charAt(1)}
+          size="large"
+        />
+        <Text style={styles.name}>{user.username}</Text>
+        <Text style={styles.bold}>
+          {user.gamesPlayed} Spiele - {user.questionAnswered} Fragen
+        </Text>
       </View>
       <View style={styles.outerRow}>
         <View style={styles.card}>
@@ -39,7 +77,7 @@ const ProfilScreen = ({ navigation }) => {
               <View style={styles.circle}></View>
               <Text style={styles.text}>Richtig</Text>
             </View>
-            <Text style={styles.textWhite}>50%</Text>
+            <Text style={styles.textWhite}>{correctPercentage}%</Text>
           </View>
         </View>
         <View style={styles.card}>
@@ -55,7 +93,7 @@ const ProfilScreen = ({ navigation }) => {
               ></View>
               <Text style={styles.text}>Falsch</Text>
             </View>
-            <Text style={styles.textWhite}>50%</Text>
+            <Text style={styles.textWhite}>{wrongPercentage}%</Text>
           </View>
         </View>
       </View>
@@ -205,4 +243,8 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ProfilScreen;
+const mapStateToProps = state => ({
+  userId: state.questions.userId
+});
+
+export default connect(mapStateToProps)(ProfilScreen);

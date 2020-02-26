@@ -5,4 +5,7 @@ export const UserSchema = new mongoose.Schema({
   password: String,
   username: String,
   questionAnswered: Number,
+  correctAnswers: Number,
+  wrongAnswers: Number,
+  gamesPlayed: Number,
 });
