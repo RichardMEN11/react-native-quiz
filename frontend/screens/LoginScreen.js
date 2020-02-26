@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -9,10 +9,12 @@ import {
 } from "react-native";
 
 import { Input, Button, Overlay } from "react-native-elements";
-import { emailRgx } from "../constants/regex";
 import axios from "axios";
+import { bindActionCreators } from "redux";
+import { addUserId } from "../store/UserActions";
+import { connect } from "react-redux";
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({ navigation, addUserId }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -25,9 +27,11 @@ const LoginScreen = ({ navigation }) => {
         password
       });
       if (data.status === 201) {
+        addUserId(data.data._id);
         navigation.navigate("Home");
       }
     } catch (error) {
+      console.log(error);
       setIsVisible(true);
     }
   };
@@ -183,4 +187,12 @@ const styles = StyleSheet.create({
   }
 });
 
-export default LoginScreen;
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      addUserId
+    },
+    dispatch
+  );
+
+export default connect(null, mapDispatchToProps)(LoginScreen);

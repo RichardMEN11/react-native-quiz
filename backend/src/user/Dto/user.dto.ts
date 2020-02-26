@@ -24,6 +24,18 @@ export class User {
   @IsNotEmpty()
   @IsNumber()
   questionAnswered: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  correctAnswers: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  wrongAnswers: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  gamesPlayed: number;
 }
 
 export class UserSignIn {
@@ -34,4 +46,18 @@ export class UserSignIn {
   @IsString()
   @MinLength(5)
   password: string;
+}
+
+export class UpdatedUser {
+  @IsNotEmpty()
+  @IsNumber()
+  questionAnswered: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  correctAnswers: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  wrongAnswers: number;
 }

@@ -1,6 +1,14 @@
 import { UserService } from './user.service';
-import { User, UserSignIn } from './Dto/user.dto';
-import { Controller, Post, Body, Logger } from '@nestjs/common';
+import { User, UserSignIn, UpdatedUser } from './Dto/user.dto';
+import {
+  Controller,
+  Post,
+  Body,
+  Logger,
+  Get,
+  Param,
+  Put,
+} from '@nestjs/common';
 
 @Controller('user')
 export class UserController {
@@ -15,7 +23,20 @@ export class UserController {
   }
 
   @Post('signIn')
-  async singIn(@Body() user: UserSignIn): Promise<String>{
+  async singIn(@Body() user: UserSignIn): Promise<User> {
     return await this.userService.signIn(user);
+  }
+
+  @Get(':id')
+  async getUserById(@Param() params): Promise<User> {
+    return await this.userService.getUserById(params.id);
+  }
+
+  @Put(':id')
+  async updateUser(
+    @Body() updatedUser: UpdatedUser,
+    @Param() params,
+  ): Promise<User> {
+    return this.userService.updateUser(updatedUser, params.id);
   }
 }

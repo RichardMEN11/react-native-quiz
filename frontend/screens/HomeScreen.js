@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Image,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import Layout from "../components/Layout";
 import QuestionCard from "../components/QuestionCard";
 

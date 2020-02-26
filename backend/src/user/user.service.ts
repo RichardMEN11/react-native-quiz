@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
   Logger,
 } from '@nestjs/common';
-import { User, UserSignIn } from './Dto/user.dto';
+import { User, UserSignIn, UpdatedUser } from './Dto/user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 
@@ -24,7 +24,10 @@ export class UserService {
         email,
         password: hashedPassword,
         username,
-        questionAnswered,
+        questionAnswered: 0,
+        correctAnswers: 0,
+        wrongAnswers: 0,
+        gamesPlayed: 0,
       });
       this.logger.verbose('Successfully saved user');
       return await newUser.save();
@@ -34,19 +37,41 @@ export class UserService {
     }
   }
 
-  async signIn(user: UserSignIn): Promise<String>{
-    const {email, password } = user; 
-    const userData = await this.userModel.findOne({email}).exec()
+  async signIn(user: UserSignIn): Promise<User> {
+    const { email, password } = user;
+    const userData = await this.userModel.findOne({ email }).exec();
 
-      const isPasswordCorrect = await bcrypt.compare(password, userData.password)
-      if(isPasswordCorrect){
-        //TODO: return token
-        return 'Success'
-      }  else {
-        //TODO: return and throw error
-        return 'Error'
-      }
-   
-   
+    const isPasswordCorrect = await bcrypt.compare(password, userData.password);
+    if (isPasswordCorrect) {
+      //TODO: return token
+      return userData;
+    } else {
+      //TODO: return and throw error
+      throw new UnauthorizedException();
+    }
+  }
+
+  async getUserById(id: string): Promise<User> {
+    return this.userModel.findOne({ _id: id });
+  }
+
+  async updateUser(updateUser: UpdatedUser, id: string): Promise<User> {
+    try {
+      return await this.userModel
+        .findByIdAndUpdate(
+          id,
+          {
+            $inc: {
+              gamesPlayed: 1,
+              questionAnswered: updateUser.questionAnswered,
+              correctAnswers: updateUser.correctAnswers,
+              wrongAnswers: updateUser.wrongAnswers,
+            },
+          },
+        )
+        .exec();
+    } catch (error) {
+      this.logger.error(error.stack);
+    }
   }
 }

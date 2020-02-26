@@ -9,8 +9,10 @@ import {
 } from "react-native";
 
 import { Button } from "react-native-elements";
+import { connect } from "react-redux";
+import axios from "axios";
 
-export default function SummaryScreen({ navigation }) {
+ function SummaryScreen({ navigation, userId }) {
   const [wrongAnswers, setWrongAnswers] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
 
@@ -27,6 +29,19 @@ export default function SummaryScreen({ navigation }) {
       )
     );
     setWrongAnswers(Math.floor(100 - correctAnswers));
+  };
+
+  const updateUserData = async () => {
+    try {
+      const response = await axios.put(`http://localhost:3000/user/${userId}`, {
+        questionAnswered: navigation.state.params.numberOfQuestions,
+        correctAnswers: navigation.state.params.points,
+        wrongAnswers:
+          navigation.state.params.numberOfQuestions -
+          navigation.state.params.points
+      });
+      console.log(response);
+    } catch (error) {}
   };
   return (
     <SafeAreaView>
@@ -74,6 +89,7 @@ export default function SummaryScreen({ navigation }) {
             buttonStyle={styles.button}
             titleStyle={styles.buttonText}
             onPress={() => {
+              updateUserData();
               navigation.navigate("Home");
             }}
           ></Button>
@@ -176,6 +192,12 @@ const styles = StyleSheet.create({
   }
 });
 
+const mapStateToProps = state => ({
+  userId: state.questions.userId
+});
+
 SummaryScreen.navigationOptions = {
   title: "Summary"
 };
+
+export default connect(mapStateToProps)(SummaryScreen)
